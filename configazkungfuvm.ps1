@@ -6,7 +6,11 @@ Enable-WindowsOptionalFeature -Online -FeatureName Containers -All -NoRestart
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 #Assign Packages to Install
-$Packages = 'googlechrome'
+$Packages = 'googlechrome',`
+            'wsl',`
+            'docker-for-windows',`
+            'visualstudiocode',`
+            'git'
 
 #Install Packages
 ForEach ($PackageName in $Packages)
