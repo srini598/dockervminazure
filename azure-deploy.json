@@ -30,8 +30,8 @@
     }
   },
   "variables": {
-    "GitHubScriptRepo": "Build5Nines/azure-kung-fu-dockervm",
-    "GitHubScriptRepoBranch": "master",
+    "GitHubScriptRepo": "srini598/dockervminazure",
+    "GitHubScriptRepoBranch": "main",
     "GitHubScriptRepoBranchURL": "[concat('https://raw.githubusercontent.com/', variables('GitHubScriptRepo'), '/', variables('GitHubScriptRepoBranch'))]",
     "azKungFuVmVnetName": "docker-vm-vnet",
     "azKungFuVmVnetPrefix": "192.168.0.0/24",
