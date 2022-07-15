@@ -33,29 +33,29 @@
     "GitHubScriptRepo": "srini598/dockervminazure",
     "GitHubScriptRepoBranch": "main",
     "GitHubScriptRepoBranchURL": "[concat('https://raw.githubusercontent.com/', variables('GitHubScriptRepo'), '/', variables('GitHubScriptRepoBranch'))]",
-    "azKungFuVmVnetName": "docker-vm-vnet",
-    "azKungFuVmVnetPrefix": "192.168.0.0/24",
-    "azKungFuVmVnetSubnet1Name": "docker-vm",
-    "azKungFuVmSubnet1Prefix": "192.168.0.0/24",
-    "azKungFuVmNsgName": "docker-vm-nsg",
-    "azKungFuVmName": "dockervm",
-    "azKungFuVmImagePublisher": "MicrosoftWindowsDesktop",
-    "azKungFuVmImageOffer": "office-365",
-    "azKungFuVmWindowsOSVersion": "1903-evd-o365pp",
-    "azKungFuVmVmSize": "Standard_D4s_v3",
-    "azKungFuVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'docker-vm-vnet')]",
-    "azKungFuVmSubnetRef": "[concat(variables('azKungFuVmID'), '/subnets/', variables('azKungFuVmVnetSubnet1Name'))]",
-    "azKungFuVmNicName": "[concat(variables('azKungFuVmName'), '-nic')]",
-    "azKungFuVm-PUBIPName": "[concat(variables('azKungFuVmName'), '-pip')]",
-    "azKungFuVmInstallScriptFolder": ".",
-    "azKungFuVmInstallScriptFileName": "configazkungfuvm.ps1",
-    "azKungFuVmInstallURL": "[concat(variables('GitHubScriptRepoBranchURL'), '/', variables('azKungFuVmInstallScriptFileName'))]"
+    "azVmVnetName": "docker-vm-vnet",
+    "azVmVnetPrefix": "192.168.0.0/24",
+    "azVmVnetSubnet1Name": "docker-vm",
+    "azVmSubnet1Prefix": "192.168.0.0/24",
+    "azVmNsgName": "docker-vm-nsg",
+    "azVmName": "dockervm",
+    "azVmImagePublisher": "MicrosoftWindowsDesktop",
+    "azVmImageOffer": "office-365",
+    "azVmWindowsOSVersion": "1903-evd-o365pp",
+    "azVmVmSize": "Standard_D4s_v3",
+    "azVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'docker-vm-vnet')]",
+    "azVmSubnetRef": "[concat(variables('azVmID'), '/subnets/', variables('azVmVnetSubnet1Name'))]",
+    "azVmNicName": "[concat(variables('azVmName'), '-nic')]",
+    "azVm-PUBIPName": "[concat(variables('azVmName'), '-pip')]",
+    "azVmInstallScriptFolder": ".",
+    "azVmInstallScriptFileName": "setupdockerenv.ps1",
+    "azVmInstallURL": "[concat(variables('GitHubScriptRepoBranchURL'), '/', variables('azVmInstallScriptFileName'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2019-09-01",
-      "name": "[variables('azKungFuVmNsgName')]",
+      "name": "[variables('azVmNsgName')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
@@ -84,41 +84,35 @@
       }
     },
     {
-      "name": "[variables('azKungFuVmVnetName')]",
+      "name": "[variables('azVmVnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [
       ],
-      "tags": {
-        "Visit": "http://azkungfu.io"
-      },
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('azKungFuVmVnetPrefix')]"
+            "[variables('azVmVnetPrefix')]"
           ]
         },
         "subnets": [
           {
-            "name": "[variables('azKungFuVmVnetSubnet1Name')]",
+            "name": "[variables('azVmVnetSubnet1Name')]",
             "properties": {
-              "addressPrefix": "[variables('azKungFuVmSubnet1Prefix')]"
+              "addressPrefix": "[variables('azVmSubnet1Prefix')]"
             }
           }
         ]
       }
     },
     {
-      "name": "[variables('azKungFuVm-PUBIPName')]",
+      "name": "[variables('azVm-PUBIPName')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
       "dependsOn": [
       ],
-      "tags": {
-        "Visit": "http://azkungfu.io"
-      },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
@@ -127,18 +121,15 @@
       }
     },
     {
-      "name": "[variables('azKungFuVmNicName')]",
+      "name": "[variables('azVmNicName')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', variables('azKungFuVmVnetName'))]",
-        "[resourceId('Microsoft.Network/publicIPAddresses', variables('azKungFuVm-PUBIPName'))]",
-        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azKungFuVmNsgName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('azVmVnetName'))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('azVm-PUBIPName'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azVmNsgName'))]"
       ],
-      "tags": {
-        "Visit": "http://azkungfu.io"
-      },
       "properties": {
         "ipConfigurations": [
           {
@@ -146,44 +137,41 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('azKungFuVmSubnetRef')]"
+                "id": "[variables('azVmSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('azKungFuVm-PUBIPName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('azVm-PUBIPName'))]"
               }
             }
           }
         ],
         "networkSecurityGroup": {
-          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azKungFuVmNsgName'))]"
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azVmNsgName'))]"
         }
       }
     },
     {
-      "name": "[variables('azKungFuVmName')]",
+      "name": "[variables('azVmName')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-12-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('azKungFuVmNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('azVmNicName'))]"
       ],
-      "tags": {
-        "Visit": "http://azkungfu.io"
-      },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('azKungFuVmVmSize')]"
+          "vmSize": "[variables('azVmVmSize')]"
         },
         "osProfile": {
-          "computerName": "[variables('azKungFuVmName')]",
+          "computerName": "[variables('azVmName')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('azKungFuVmImagePublisher')]",
-            "offer": "[variables('azKungFuVmImageOffer')]",
-            "sku": "[variables('azKungFuVmWindowsOSVersion')]",
+            "publisher": "[variables('azVmImagePublisher')]",
+            "offer": "[variables('azVmImageOffer')]",
+            "sku": "[variables('azVmWindowsOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
@@ -194,23 +182,20 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('azKungFuVmNicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('azVmNicName'))]"
             }
           ]
         }
       },
       "resources": [
         {
-          "name": "InstallazKungFuVmApps",
+          "name": "DockerEnvSetupExtension",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2017-12-01",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('azKungFuVmName'))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('azVmName'))]"
           ],
-          "tags": {
-            "Visit": "http://azkungfu.io"
-          },
           "properties": {
             "publisher": "Microsoft.Compute",
             "type": "CustomScriptExtension",
@@ -218,9 +203,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "[variables('azKungFuVmInstallURL')]"
+                "[variables('azVmInstallURL')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('azKungFuVmInstallScriptFolder'), '/', variables('azKungFuVmInstallScriptFileName'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('azVmInstallScriptFolder'), '/', variables('azVmInstallScriptFileName'))]"
             }
           }
         }
