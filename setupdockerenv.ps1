@@ -6,15 +6,15 @@ Enable-WindowsOptionalFeature -Online -FeatureName Containers -All -NoRestart
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 #Assign Packages to Install
-$Packages = 'googlechrome',`
-            'wsl2',`
-            'docker-for-windows',`
-            'visualstudiocode',`
-            'git'
+$Packages = 'googlechrome', `
+  'nodejs', `
+  'docker-for-windows', `
+  'visualstudiocode', `
+  'git'
 
 #Install Packages
 ForEach ($PackageName in $Packages)
-{choco install $PackageName -y}
+{ choco install $PackageName -y }
 
 #Bring down Desktop Shortcuts
 $zipDownload = "https://github.com/srini598/dockervminazure/blob/main/shortcuts.zip?raw=true"
